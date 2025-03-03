@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center text-primary fw-bold">🎓 Welcome, {{ request.user.username }}!</h2>
+        <hr>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="text-secondary fw-semibold">📄 Your Submitted Exams</h3>
+            <a href="{% url 'student_exam_fill' %}" class="btn btn-success btn-lg shadow-sm">
+                + Fill Exam Details
+            </a>
+        </div>
+
+        {% if exams %}
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered text-center align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>📚 Subject</th>
+                        <th>📝 Exam Type</th>
+                        <th>🎓 Year</th>
+                        <th>👨‍🏫 Staff Name</th>
+                        <th>📊 Status</th>
+                        <th>🔍 Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for exam in exams %}
+                    <tr>
+                        <td class="fw-bold">{{ exam.subject }}</td>
+                        <td>{{ exam.get_exam_type_display }}</td>
+                        <td>{{ exam.get_year_display }}</td>
+                        <td>{{ exam.staff_name }}</td>
+                        <td>
+                            {% if exam.is_graded %}
+                                <span class="badge bg-success px-3 py-2">Graded</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark px-3 py-2">Pending</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if exam.is_graded %}
+                                <a href="{% url 'view_results' exam.id %}" class="btn btn-primary btn-sm shadow-sm">
+                                    View Results
+                                </a>
+                            {% else %}
+                                <button class="btn btn-secondary btn-sm shadow-sm" disabled>Awaiting Grading</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info text-center">
+            <p class="mb-0">🚀 No exams submitted yet. Start by filling out your first exam!</p>
+        </div>
+        {% endif %}
+
+        <div class="text-center mt-4">
+            <a href="{% url 'logout' %}" class="btn btn-danger btn-lg px-4 shadow-sm">🚪 Logout</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .card {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .table th {
+        background-color: #212529;
+        color: white;
+    }
+    .table td {
+        vertical-align: middle;
+    }
+    .btn {
+        border-radius: 8px;
+    }
+    .btn-success {
+        background-color: #28a745;
+    }
+</style>
+{% endblock %}

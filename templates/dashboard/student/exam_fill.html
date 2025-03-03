@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-lg p-4" style="width: 100%; max-width: 500px; border-radius: 12px;">
+        <h2 class="text-center text-primary fw-bold">📝 Fill Exam Details</h2>
+        <hr class="mb-4">
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} text-center">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" class="needs-validation" novalidate>
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">📚 Subject Name</label>
+                <input type="text" name="subject" class="form-control rounded-3" placeholder="Enter subject name" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">📌 Exam Type</label>
+                <select name="exam_type" class="form-select rounded-3" required>
+                    <option value="" disabled selected>Select Exam Type</option>
+                    <option value="CAT1">CAT 1</option>
+                    <option value="CAT2">CAT 2</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">🎓 Year</label>
+                <select name="year" class="form-select rounded-3" required>
+                    <option value="" disabled selected>Select Year</option>
+                    <option value="1">First Year</option>
+                    <option value="2">Second Year</option>
+                    <option value="3">Third Year</option>
+                    <option value="4">Fourth Year</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">👨‍🏫 Staff Name</label>
+                <input type="text" name="staff_name" class="form-control rounded-3" placeholder="Enter staff name" required>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100 py-2 fw-bold shadow-sm">✅ Submit Exam Details</button>
+        </form>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'student_dashboard' %}" class="btn btn-outline-secondary w-100 py-2 fw-bold shadow-sm">⬅ Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .card {
+        background: #ffffff;
+        border: none;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-control, .form-select {
+        border: 1px solid #ced4da;
+    }
+    .form-control:focus, .form-select:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+    }
+</style>
+{% endblock %}

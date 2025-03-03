@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar vh-100 p-3">
+            <h4 class="text-white text-center">📚 Teacher Panel</h4>
+            <hr class="text-white">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'teacher_dashboard' %}">🏠 Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'create_exam' %}">✏️ Create Exam</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'logout' %}">🚪 Logout</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="text-primary">👨‍🏫 Welcome, {{ request.user.username }}</h2>
+                <a href="{% url 'create_exam' %}" class="btn btn-success btn-lg shadow-sm">
+                    + Create Exam
+                </a>
+            </div>
+            <hr>
+
+            <h3 class="text-secondary">📄 Created Exams</h3>
+            {% if exams %}
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered text-center">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Subject</th>
+                                <th>Exam Type</th>
+                                <th>Year</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for exam in exams %}
+                                <tr>
+                                    <td class="fw-bold">{{ exam.subject }}</td>
+                                    <td>{{ exam.get_exam_type_display }}</td>
+                                    <td>{{ exam.get_year_display }}</td>
+                                    <td>
+                                        <a href="{% url 'view_submissions' exam.id %}" class="btn btn-primary btn-sm">
+                                            📂 View Submissions
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info text-center">
+                    <p class="mb-0">No exams created yet.</p>
+                </div>
+            {% endif %}
+        </main>
+    </div>
+</div>
+
+<style>
+    /* Sidebar Styling */
+    .sidebar {
+        height: 100vh;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 250px;
+    }
+
+    /* Adjust main content */
+    main {
+        margin-left: 260px;
+    }
+
+    /* Button Styling */
+    .btn-sm {
+        font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .sidebar {
+            position: relative;
+            height: auto;
+            width: 100%;
+        }
+        main {
+            margin-left: 0;
+        }
+    }
+</style>
+{% endblock %}

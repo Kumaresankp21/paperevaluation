@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center text-primary">📑 Submissions for {{ exam.subject }} ({{ exam.get_exam_type_display }})</h2>
+    <hr>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} text-center">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    {% if submissions %}
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <table class="table table-bordered text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>📛 Student Name</th>
+                        <th>🎓 Year</th>
+                        <th>📎 Answer Sheet</th>
+                        <th>⬆️ Upload Answer Sheet</th>
+                        <th>📝 Evaluate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for submission in submissions %}
+                        <tr>
+                            <td>{{ submission.student.username }}</td>
+                            <td>{{ submission.get_year_display }}</td>  
+                            <td>
+                                {% if submission.answer_sheet %}
+                                    <a href="{{ submission.answer_sheet.url }}" class="btn btn-info btn-sm" target="_blank">📂 View</a>
+                                {% else %}
+                                    <span class="badge bg-danger">Not Uploaded</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if submission.answer_sheet %}
+                                    <span class="badge bg-success">✅ Uploaded</span>
+                                {% else %}
+                                    <input type="file" name="answer_sheet_{{ submission.id }}" class="form-control form-control-sm">
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if submission.answer_sheet %}
+                                    <a href="{% url 'evaluate_submission' submission.id %}" class="btn btn-warning btn-sm">📊 Evaluate</a>
+                                {% else %}
+                                    <button class="btn btn-secondary btn-sm" disabled>⚠️ No Answer Sheet</button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success px-4 py-2">⬆️ Upload Selected Files</button>
+            </div>
+        </form>
+    {% else %}
+        <div class="alert alert-info text-center">
+            No submissions yet.
+        </div>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="{% url 'teacher_dashboard' %}" class="btn btn-secondary">⬅️ Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

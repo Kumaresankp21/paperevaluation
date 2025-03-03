@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<header class="hero-section">
+    <div class="container text-center text-white">
+        <h1 class="display-4 fw-bold">AI-Powered Exam Grading System</h1>
+        <p class="lead">Fast. Accurate. Automated.</p>
+        <a href="{% url 'login' %}" class="btn btn-warning btn-lg m-2">🎓 Student Login</a>
+        <a href="{% url 'teacher_login' %}" class="btn btn-primary btn-lg m-2">👨‍🏫 Teacher Login</a>
+    </div>
+</header>
+
+<!-- Information Section -->
+<section class="container mt-5 text-white">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <img src="https://source.unsplash.com/600x400/?education,technology" class="img-fluid rounded shadow" alt="AI Exam Grader">
+        </div>
+        <div class="col-md-6">
+            <h2 class="text-warning fw-bold">📚 About AI Exam Grader</h2>
+            <p>Our AI-powered system automatically grades handwritten answer sheets using advanced OCR and AI evaluation techniques.</p>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item bg-dark text-white">✅ Automates answer sheet evaluation</li>
+                <li class="list-group-item bg-dark text-white">✅ Provides instant grading reports</li>
+                <li class="list-group-item bg-dark text-white">✅ Reduces teacher workload</li>
+                <li class="list-group-item bg-dark text-white">✅ Ensures fair and accurate assessment</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="container mt-5 text-white">
+    <h2 class="text-center text-success fw-bold">🚀 Why Choose Our AI Grading System?</h2>
+    <div class="row text-center">
+        <div class="col-md-4">
+            <img src="https://source.unsplash.com/300x200/?ai,technology" class="img-fluid rounded shadow">
+            <h4 class="mt-3 text-warning">⚡ Fast Processing</h4>
+            <p>Get results in seconds with our AI-powered grading system.</p>
+        </div>
+        <div class="col-md-4">
+            <img src="https://source.unsplash.com/300x200/?students,learning" class="img-fluid rounded shadow">
+            <h4 class="mt-3 text-warning">📊 Accurate Evaluation</h4>
+            <p>Our AI ensures unbiased and precise grading.</p>
+        </div>
+        <div class="col-md-4">
+            <img src="https://source.unsplash.com/300x200/?teacher,classroom" class="img-fluid rounded shadow">
+            <h4 class="mt-3 text-warning">👨‍🏫 Teacher-Friendly</h4>
+            <p>Designed to reduce teacher workload and increase efficiency.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer mt-5 py-3 text-white text-center">
+    <p class="mb-0">© 2025 AI Exam Grader. All Rights Reserved.</p>
+</footer>
+
+<style>
+    /* Hero Section Styling */
+    .hero-section {
+        background: linear-gradient(to right, rgba(0, 0, 0, 0.8), rgba(34, 34, 34, 0.9)), 
+                    url("https://source.unsplash.com/1600x600/?education,technology") center/cover no-repeat;
+        padding: 120px 0;
+        color: white;
+    }
+    
+    /* Background Color */
+    body {
+        background: #121212; /* Dark background */
+        color: white;
+    }
+
+    /* Button Styling */
+    .btn-lg {
+        font-size: 1.2rem;
+        font-weight: bold;
+        border-radius: 8px;
+    }
+
+    /* Footer Styling */
+    .footer {
+        background-color: #222;
+        padding: 20px;
+    }
+
+    /* General Image Styling */
+    .img-fluid {
+        border-radius: 10px;
+    }
+
+    /* List group styling */
+    .list-group-item {
+        border: none;
+    }
+</style>
+{% endblock %}

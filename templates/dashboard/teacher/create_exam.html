@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4 rounded-4">
+        <h2 class="text-center text-primary fw-bold">📄 Create Exam</h2>
+        <hr class="mb-4">
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} text-center">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label class="form-label fw-bold">📚 Subject Name</label>
+                <input type="text" name="subject" class="form-control rounded-3 shadow-sm" placeholder="Enter subject name" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">📌 Exam Type</label>
+                <select name="exam_type" class="form-select rounded-3 shadow-sm" required>
+                    <option value="CAT 1">📝 CAT 1</option>
+                    <option value="CAT 2">📝 CAT 2</option>
+                    <option value="Term 1">📅 Term 1</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">🎓 Year</label>
+                <select name="year" class="form-select rounded-3 shadow-sm" required>
+                    <option value="1">📕 First Year</option>
+                    <option value="2">📗 Second Year</option>
+                    <option value="3">📘 Third Year</option>
+                    <option value="4">📙 Fourth Year</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">👨‍🏫 Staff Name</label>
+                <input type="text" name="staff_name" class="form-control rounded-3 shadow-sm" placeholder="Enter staff name" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">📄 Upload Question Paper (PDF)</label>
+                <input type="file" name="question_paper" class="form-control rounded-3 shadow-sm" accept=".pdf" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">📝 Upload Answer Key (PDF)</label>
+                <input type="file" name="answer_key" class="form-control rounded-3 shadow-sm" accept=".pdf" required>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100 fw-bold py-2 shadow-lg">
+                ✅ Submit Exam
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'teacher_dashboard' %}" class="btn btn-secondary fw-bold shadow-sm px-4 py-2">
+                ⬅️ Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f4f6f9; /* Light Gray Background */
+    }
+
+    .card {
+        max-width: 600px;
+        margin: auto;
+        background: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border: none;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+    .form-control {
+        border-radius: 10px;
+    }
+</style>
+{% endblock %}
