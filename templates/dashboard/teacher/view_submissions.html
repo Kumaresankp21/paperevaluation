@@ -25,6 +25,12 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <div id="loading-spinner" class="text-center mt-4 d-none">
+                        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p id="loading-text" class="mt-3">Processing Evaluation...</p>
+                    </div>
                     {% for submission in submissions %}
                         <tr>
                             <td>{{ submission.student.username }}</td>
@@ -69,3 +75,18 @@
     </div>
 </div>
 {% endblock %}
+
+
+
+<script>
+    document.getElementById("evaluate-btn").addEventListener("click", function() {
+        // Hide button and show spinner
+        document.getElementById("evaluate-btn").classList.add("d-none");
+        document.getElementById("loading-spinner").classList.remove("d-none");
+    
+        // Redirect to evaluation page after a short delay
+        setTimeout(function() {
+            window.location.href = "{% url 'evaluate_submission' submission.id %}";
+        }, 2000); // Delay for UX (2 seconds)
+    });
+    </script>

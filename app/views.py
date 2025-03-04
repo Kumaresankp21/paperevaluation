@@ -213,10 +213,33 @@ def evaluate_submission_view(request, submission_id):
             total_score=total_score,
             max_score=max_score,
         )
+        submission.is_graded = True
+        submission.save()
 
         messages.success(request, "Evaluation completed successfully!")
 
     # 🎯 Render the evaluation results page
+    return render(request, 'dashboard/teacher/evaluate_submission.html', {
+        'submission': submission,
+        'formatted_report': formatted_report,
+        'total_score': total_score,
+        'max_score': max_score
+    })
+
+
+def view_results(request,exam_id):
+    submission = get_object_or_404(ExamSubmission, id=exam_id)
+
+    # 🔍 Check if the submission is already evaluated
+    evaluation = EvaluationResult.objects.filter(submission=submission).first()
+    
+    if evaluation:
+        messages.info(request, "This submission has already been evaluated.")
+        formatted_report = parse_json_string(evaluation.formatted_report)
+  
+        total_score = evaluation.total_score
+        max_score = evaluation.max_score
+
     return render(request, 'dashboard/teacher/evaluate_submission.html', {
         'submission': submission,
         'formatted_report': formatted_report,
