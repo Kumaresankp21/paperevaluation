@@ -54,10 +54,19 @@ class ExamSubmission(models.Model):
 
 
 class EvaluationResult(models.Model):
-    submission = models.OneToOneField(ExamSubmission, on_delete=models.CASCADE, related_name="evaluation")
-    evaluated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="evaluations")
-    json_result = models.JSONField()  # Stores the evaluation result in JSON format
-    formatted_report = models.TextField()  # Stores the human-readable report
+    submission = models.OneToOneField(
+        ExamSubmission, 
+        on_delete=models.CASCADE, 
+        related_name="evaluation"
+    )
+    evaluated_by = models.ForeignKey(
+        User, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True, 
+        related_name="evaluations"
+    )
+    formatted_report = models.TextField()  # Stores only the human-readable report
     total_score = models.FloatField(default=0.0)
     max_score = models.FloatField(default=0.0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -65,3 +74,4 @@ class EvaluationResult(models.Model):
     def __str__(self):
         exam_subject = self.submission.exam.subject if self.submission.exam else "Unknown Exam"
         return f"Evaluation for {self.submission.student.username} - {exam_subject}"
+

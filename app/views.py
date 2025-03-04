@@ -10,6 +10,9 @@ from .evaluation.extract_question_answerkey import question_answer_content
 from .evaluation.preprocess_ocr import preprocess_ocr_question_wise
 from .evaluation.evalution import evaluate_exam_with_ocr_to_json
 from .evaluation.report import generate_report
+from.evaluation.proper_json import parse_json_string
+import json 
+
 
 def home(request):
     return render(request, 'home.html')
@@ -166,44 +169,57 @@ def view_submissions(request, exam_id):
 
     return render(request, "dashboard/teacher/view_submissions.html", {"exam": exam, "submissions": submissions})
 
+
 def evaluate_submission_view(request, submission_id):
     submission = get_object_or_404(ExamSubmission, id=submission_id)
 
-    # 1️⃣ Extract OCR text from uploaded answer sheet
-    ocr_text = generate_ocr(submission.answer_sheet.path)
+    # 🔍 Check if the submission is already evaluated
+    evaluation = EvaluationResult.objects.filter(submission=submission).first()
+    
+    if evaluation:
+        messages.info(request, "This submission has already been evaluated.")
+        formatted_report = parse_json_string(evaluation.formatted_report)
+  
+        total_score = evaluation.total_score
+        max_score = evaluation.max_score
+    else:
+        # 📝 1️⃣ Extract OCR text from uploaded answer sheet
+        ocr_text = generate_ocr(submission.answer_sheet.path)
 
-    # 2️⃣ Extract question paper and answer key
-    question_paper_text = question_answer_content(submission.exam.question_paper.path)
-    answer_key_text = question_answer_content(submission.exam.answer_key.path)
+        # 📄 2️⃣ Extract question paper and answer key
+        question_paper_text = question_answer_content(submission.exam.question_paper.path)
+        answer_key_text = question_answer_content(submission.exam.answer_key.path)
 
-    # 3️⃣ Preprocess OCR text to align with question numbers
-    structured_ocr_text = preprocess_ocr_question_wise(ocr_text, question_paper_text)
+        # 📑 3️⃣ Preprocess OCR text to align with question numbers
+        structured_ocr_text = preprocess_ocr_question_wise(ocr_text, question_paper_text)
 
-    # 4️⃣ Evaluate answers using Gemini API
-    evaluation_result_json = evaluate_exam_with_ocr_to_json(structured_ocr_text, answer_key_text)
+        # 🤖 4️⃣ Evaluate answers using Gemini API
+        evaluation_result_json = evaluate_exam_with_ocr_to_json(structured_ocr_text, answer_key_text)
 
-    # 5️⃣ Generate a detailed report
-    formatted_report = generate_report(evaluation_result_json)
+        # 📊 5️⃣ Generate a detailed report
+        formatted_report = generate_report(evaluation_result_json)
 
-    # 6️⃣ Extract total score and max score from JSON
-    import json
-    evaluation_result_json = evaluation_result_json.strip("`")
-    print(evaluation_result_json)
-    evaluation_data = json.loads(evaluation_result_json)
-    total_score = sum(q["marks_awarded"] for q in evaluation_data["questions"])
-    max_score = sum(q["max_marks"] for q in evaluation_data["questions"])
+        # 🔢 6️⃣ Extract total score and max score from JSON
 
-    # 7️⃣ Save the evaluation result in a separate model
-    evaluation, created = EvaluationResult.objects.update_or_create(
-        submission=submission,
-        defaults={
-            "evaluated_by": request.user,
-            "json_result": evaluation_data,
-            "formatted_report": formatted_report,
-            "total_score": total_score,
-            "max_score": max_score,
-        },
-    )
+        formatted_report = parse_json_string(formatted_report)
+        total_score = formatted_report["summary"]["user_total_score"]
+        max_score =  formatted_report["summary"]["total_possible_score"]
 
-    messages.success(request, "Evaluation completed successfully!")
-    return redirect('view_submissions', exam_id=submission.exam.id)
+        # 💾 7️⃣ Save the evaluation result in the database
+        evaluation = EvaluationResult.objects.create(
+            submission=submission,
+            evaluated_by=request.user,
+            formatted_report=json.dumps(formatted_report),
+            total_score=total_score,
+            max_score=max_score,
+        )
+
+        messages.success(request, "Evaluation completed successfully!")
+
+    # 🎯 Render the evaluation results page
+    return render(request, 'dashboard/teacher/evaluate_submission.html', {
+        'submission': submission,
+        'formatted_report': formatted_report,
+        'total_score': total_score,
+        'max_score': max_score
+    })
