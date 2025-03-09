@@ -55,7 +55,14 @@ def evaluate_exam_with_ocr_to_json(ocr_content, answer_key):
     - `"marks_awarded"`: The marks assigned based on evaluation.
     - `"max_marks"`: The appropriate maximum marks (2, 13, or 14 based on the section).
     - `"reason"`: Justification for the marks awarded.
-
+    at the last give summary as 
+    summary
+    part_a_count: actual_part_a_count
+    part_b_count: actual_part_b_count
+    part_c_count: actual_part_c_count
+    total_possible_score: computed_total_possible_score
+    user_total_score: computed_user_total_score
+    score_summary: user_total_score / total_possible_score
     ### **Input Variables:**
     - **OCR Content:** `{ocr_content}`
     - **Answer Key:** `{answer_key}`

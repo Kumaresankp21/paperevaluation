@@ -36,7 +36,8 @@ def generate_report(result):
     Ensure all calculations are accurate and that no marks are added or subtracted incorrectly.
 
     JSON Data:
-    {result} """
+    {result} 
+    """
     # Generate evaluation using GenAI
     response = model.generate_content(prompt)
 

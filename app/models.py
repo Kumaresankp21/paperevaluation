@@ -34,10 +34,10 @@ class ExamSubmission(models.Model):
     ]
 
     YEARS = [
-        ('1', 'First Year'),
-        ('2', 'Second Year'),
-        ('3', 'Third Year'),
-        ('4', 'Fourth Year'),
+        (1, "First Year"),
+        (2, "Second Year"),
+        (3, "Third Year"),
+        (4, "Fourth Year"),
     ]
 
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)  # Remove null=True, blank=True

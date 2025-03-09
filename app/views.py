@@ -69,27 +69,34 @@ def logout_view(request):
     messages.success(request, "Logged out successfully!")
     return redirect('login')
 
-
 def student_exam_fill(request):
     if request.method == "POST":
-        subject = request.POST['subject']
-        exam_type = request.POST['exam_type']
-        year = request.POST['year']
-        staff_name = request.POST['staff_name']
+        subject = request.POST.get("subject")
+        exam_type = request.POST.get("exam_type")
+        year = request.POST.get("year")
+        staff_name = request.POST.get("staff_name")
 
-        ExamSubmission.objects.create(
+        # 🔍 1️⃣ Check if an exam exists with these details
+        exam = Exam.objects.filter(year=year).first()
+        
+        if not exam:
+            messages.error(request, "❌ No matching exam found. Please check the details.")
+            return redirect("student_exam_fill")  # Prevent saving if exam doesn't exist
+
+        # ✅ 2️⃣ Create a new submission linked to this exam
+        submission = ExamSubmission.objects.create(
+            exam=exam,  # Assigning the required exam field
             student=request.user,
             subject=subject,
             exam_type=exam_type,
             year=year,
-            staff_name=staff_name
+            staff_name=staff_name,
         )
 
-        messages.success(request, "Exam details submitted successfully!")
-        return redirect('student_dashboard')
+        messages.success(request, "✅ Exam submission successful!")
+        return redirect("student_dashboard")
 
-    return render(request, 'dashboard/student/exam_fill.html')
-
+    return render(request, "dashboard/student/exam_fill.html")
 
 def teacher_login(request):
     if request.method == "POST":
@@ -153,7 +160,7 @@ def create_exam(request):
 def view_submissions(request, exam_id):
     exam = get_object_or_404(Exam, id=exam_id)
     submissions = ExamSubmission.objects.filter(year=exam.year)
-
+    
     if request.method == "POST":
         for submission in submissions:
             file_field_name = f"answer_sheet_{submission.id}"
@@ -202,6 +209,7 @@ def evaluate_submission_view(request, submission_id):
         # 🔢 6️⃣ Extract total score and max score from JSON
 
         formatted_report = parse_json_string(formatted_report)
+        print(formatted_report)
         total_score = formatted_report["summary"]["user_total_score"]
         max_score =  formatted_report["summary"]["total_possible_score"]
 
