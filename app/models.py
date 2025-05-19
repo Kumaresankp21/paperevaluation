@@ -75,3 +75,11 @@ class EvaluationResult(models.Model):
         exam_subject = self.submission.exam.subject if self.submission.exam else "Unknown Exam"
         return f"Evaluation for {self.submission.student.username} - {exam_subject}"
 
+class APIKey(models.Model):
+    name = models.CharField(max_length=100, unique=True, help_text="A name to identify the API key (e.g., Google, OpenAI).")
+    key = models.TextField(help_text="The actual API key string.")
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True, help_text="Indicates if the key is currently in use.")
+
+    def __str__(self):
+        return f"{self.name} ({'Active' if self.is_active else 'Inactive'})"

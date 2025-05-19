@@ -1,8 +1,7 @@
 import fitz  # PyMuPDF for working with PDFs
 import google.generativeai as genai
-
-# Set your API key
-API_KEY = "AIzaSyBO4ly06ph2u9Co1Ag1gYAprWcDNPmW6tc"
+from app.models import APIKey
+API_KEY = APIKey.objects.filter(is_active=True).order_by('-created_at').first().key
 genai.configure(api_key=API_KEY)
 
 def upload_file(path, mime_type=None):

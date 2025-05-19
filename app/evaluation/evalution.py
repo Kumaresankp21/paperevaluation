@@ -1,8 +1,7 @@
 import google.generativeai as genai
 import json
-
-# Configure Google Generative AI
-API_KEY = "AIzaSyBO4ly06ph2u9Co1Ag1gYAprWcDNPmW6tc"
+from app.models import APIKey
+API_KEY = APIKey.objects.filter(is_active=True).order_by('-created_at').first().key
 genai.configure(api_key=API_KEY)
 
 generation_config = {
@@ -47,7 +46,7 @@ def evaluate_exam_with_ocr_to_json(ocr_content, answer_key):
     4. **Ensure accuracy**: Do not introduce extra questions or duplicate any.
 
     ### **Evaluation Criteria**  
-    For each question, return a **JSON object** with:
+    For each question, return a **JSON object** inside the 'report' key:
     - `"question_number"`: The number of the question.
     - `"question"`: The extracted question text.
     - `"student_answer"`: The student's response.
